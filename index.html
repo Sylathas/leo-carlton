@@ -3,11 +3,14 @@
 
 <head>
     <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>Leo Carlton</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 
 <body>
@@ -15,34 +18,39 @@
     <div id="canvasCss" class="canvas"></div>
     <div id="project">
         <div id="projectContent">
-            <div id="projectImage"></div>
             <h1 id="projectName"></h1>
             <div id="projectText"></div>
+            <div id="overlayCanvas"></div>
         </div>
         <div id="closeDiv"></div>
     </div>
-    <div class='menus' id="menuLeft">
-        <h1>Leo Carlton</h1>
-        <div id="Drawings">
-            <h3>Drawings ↓</h2>
+    <div class='menus' id="menuContainerLeft">
+        <div id="menuLeft" class="menuInterior">
+            <!--<p id="title">Leo Carlton</p>-->
+            <div id="logo"></div>
+            <div id="2D" class="category">
+                <p>2D:</p>
+            </div>
+            <div id="3D" class="category">
+                <p>3D:</p>
+            </div>
+            <div id="Film" class="category">
+                <p>Film:</p>
+            </div>
+            <div id="Exhibitions" class="category">
+                <p>Exhibitions:</p>
+            </div>
         </div>
-        <div id="Exhibitions">
-            <h3>Exhibitions ↓</h2>
-        </div>
-        <div id="Fashion">
-            <h3>Fashion ↓</h2>
-        </div>
-        <div id="Tattoos">
-            <h3>Tattoos ↓</h2>
-        </div>
+        <div class="resize" id="resizeLeft"></div>
+        <div class="tabs" id="contentTab"></div>
     </div>
-    <div class='menus' id="menuRight">
-        <h1>About</h1>
-        <p id="aboutText">Leo is a designer who works in both the digital and physical realms. They sculpt in virtual
-            reality and 3D
-            print in renewable and natural materials. Using 3D scans of a head or face, Leo sculpts and prints
-            made-to-measure Masks and Modulars for a customisable experience to be an avatar in reality.
-        </p>
+    <div class='menus' id="menuContainerRight">
+        <div class="tabs" id="aboutTab"></div>
+        <div class="resize" id="resizeRight"></div>
+        <div id="menuRight" class="menuInterior">
+            <div id="aboutText"></div>
+            <div id="aboutCredits"></div>
+        </div>
     </div>
     <script type="module" src="/main.js"></script>
 </body>
