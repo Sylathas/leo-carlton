@@ -1,9 +1,9 @@
-import * as THREE from 'three';
-import * as TWEEN from "@tweenjs/tween.js";
-import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, getDocs, orderBy } from "firebase/firestore";
-import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js';
+import * as TWEEN from "https://cdnjs.cloudflare.com/ajax/libs/tween.js/23.1.2/tween.umd.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js'
+import { getFirestore, collection, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/renderers/CSS3DRenderer.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/loaders/GLTFLoader.js';
 
 //------------
 //FRONTEND
