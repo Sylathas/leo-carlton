@@ -256,4 +256,8 @@ body {
     #closeDiv {
         height: 80px;
     }
+
+    .canvas {
+        width: 300%;
+    }
 }

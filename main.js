@@ -17,6 +17,7 @@ var originX, endX, resizeElement;
 
 init();
 animate();
+onWindowResize();
 
 function init() {
     //UTIL
@@ -269,6 +270,7 @@ function onWindowResize() {
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     cssrenderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
 }
 
 //Resize Containers
