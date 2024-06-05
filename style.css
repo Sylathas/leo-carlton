@@ -261,13 +261,6 @@ body {
         transform: rotate(-45deg) translate(0%, 0%);
     }
 
-    .tabs p {
-        position: absolute;
-        transform: rotate(-45deg);
-        font-size: 15px;
-        text-align: center;
-    }
-
     #project {
         width: 100vw;
         height: 100%;
