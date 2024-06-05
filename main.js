@@ -186,9 +186,9 @@ $('#menuLeft').on("mouseover", '.projectLink', function () {
     background.css3dObject.element.style.backgroundImage = 'url("' + project.image + '")';
 });
 
-$('#menuLeft').on("mouseleave", '.projectLink', function () {
+/*$('#menuLeft').on("mouseleave", '.projectLink', function () {
     background.css3dObject.element.style.backgroundImage = 'url("")';
-});
+});*/
 
 $('#menuLeft').on("click", '.projectLink', function () {
     //Get correct Project
@@ -327,11 +327,12 @@ const db = getFirestore(app);
 let Projects = [];
 
 class Project {
-    constructor(name, image, text, type, id, html) {
+    constructor(name, image, text, type, createdOn, id, html) {
         this.name = name;
         this.image = image;
         this.text = text;
         this.type = type;
+        this.createdOn = createdOn;
         this.id = id;
         this.html = html;
     }
@@ -351,6 +352,11 @@ await querySnapshotAbout.forEach((doc) => {
         converter = new showdown.Converter(),
         html = converter.makeHtml(text);
     target.innerHTML = html;
+
+    doc.data().order_of_categories.split("\n").forEach((cat) => {
+        const category = '<div id="' + cat + '" class="category"><p>' + cat + ' :</p></div>';
+        $('#menuLeft').append(category);
+    });
 });
 
 //Create Projects
@@ -360,9 +366,10 @@ await querySnapshot.forEach((doc) => {
     const header_image = doc.data().cover_image;
     const type = doc.data().type;
     const text = doc.data().text;
+    const createdOn = doc.data().created_on;
 
     const project = '<p class="projectLink" id=' + Projects.length + '> ' + name + '</p>';
-    Projects.push(new Project(name, header_image, text, type, Projects.length, project));
+    Projects.push(new Project(name, header_image, text, type, createdOn, Projects.length, project));
     //$('#' + type.slice(1)).append(project);
 });
 
