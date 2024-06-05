@@ -363,6 +363,8 @@ await querySnapshotAbout.forEach((doc) => {
         html = converter.makeHtml(text);
     target.innerHTML = html;
 
+    $('#aboutCredits').append('<p id="myCredits">Website developed by <a href="https://www.instagram.com/sylathas/">Sylathas</a></p>')
+
     doc.data().order_of_categories.split("\n").forEach((cat) => {
         const category = '<div id="' + cat + '" class="category"><p>' + cat + ' :</p></div>';
         $('#menuLeft').append(category);
