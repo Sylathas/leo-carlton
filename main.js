@@ -195,7 +195,9 @@ $('#menuLeft').on("mouseover", '.projectLink', function () {
         }
     }
     const project = Projects[index];
-    background.css3dObject.element.style.backgroundImage = 'url("' + project.image + '")';
+    if (!mobile) {
+        background.css3dObject.element.style.backgroundImage = 'url("' + project.image + '")';
+    }
     dateIn = Date.now();
 });
 
