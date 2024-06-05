@@ -259,20 +259,23 @@ function triggerTabs(child) {
         $('#menuContainerRight').css({ 'right': '-100%', 'width': '110%' });
         $('#menuContainerLeft').css({ 'left': '-100%', 'width': '110%' });
         $('#aboutTab').css('transform', 'rotate(-45deg)');
-        $('#contentTab').css('transform', 'rotate(-45deg)');
+        $('#aboutTab p').text('about');
+        $('#contentTab p').text('work');
+        $('#contentTab').css('transform', 'rotate(135deg)');
         active = false;
     } else {
         if ($(child).parent().attr('id') == 'menuContainerRight') {
-            $(child).parent().css({ 'right': '0', 'width': '100%' });
-            $('#aboutTab').css('transform', 'rotate(-45deg) translate(15%, 15%)');
+            $(child).parent().css({ 'right': '0', 'width': '98%' });
+            $('#aboutTab').css('transform', 'rotate(-45deg) translate(10%, 10%)');
             $('#menuContainerLeft').css('left', '-120%');
+            $('.tabs p').text('close');
             active = true;
         } else {
-            console.log('yo');
-            $(child).parent().css({ 'left': '0', 'width': '100%' });
-            $('#contentTab').css('transform', 'rotate(-45deg) translate(-15%, -15%)');
+            $(child).parent().css({ 'left': '0', 'width': '98%' });
+            $('#contentTab').css('transform', 'rotate(135deg) translate(10%, 10%)');
             $('#menuContainerRight').css('right', '-120%');
             active = true;
+            $('.tabs p').text('close');
         }
     }
 }
