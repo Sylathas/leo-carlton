@@ -246,7 +246,7 @@ $('#menuLeft').on("click", '.projectLink', function () {
 
 $('#project').on("click", '#closeDiv', function () {
     projectOpen = false;
-    $("#project").css({ "top": '-100%' });
+    $("#project").css({ "top": '-105%' });
     divRotation += 0;
 });
 
