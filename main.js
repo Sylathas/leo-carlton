@@ -73,7 +73,6 @@ function init() {
                 color: 0xA9A9A9
             });
             gizmo.children[0].material = newMaterial;
-            console.log(gizmo.children[0])
         }
     );
 
@@ -259,15 +258,20 @@ function triggerTabs(child) {
     if (active) {
         $('#menuContainerRight').css({ 'right': '-100%', 'width': '110%' });
         $('#menuContainerLeft').css({ 'left': '-100%', 'width': '110%' });
+        $('#aboutTab').css('transform', 'rotate(-45deg)');
+        $('#contentTab').css('transform', 'rotate(-45deg)');
         active = false;
     } else {
         if ($(child).parent().attr('id') == 'menuContainerRight') {
             $(child).parent().css({ 'right': '0', 'width': '100%' });
-            $('#menuContainerLeft').css('left', '-110%');
+            $('#aboutTab').css('transform', 'rotate(-45deg) translate(15%, 15%)');
+            $('#menuContainerLeft').css('left', '-120%');
             active = true;
         } else {
+            console.log('yo');
             $(child).parent().css({ 'left': '0', 'width': '100%' });
-            $('#menuContainerRight').css('right', '-110%');
+            $('#contentTab').css('transform', 'rotate(-45deg) translate(-15%, -15%)');
+            $('#menuContainerRight').css('right', '-120%');
             active = true;
         }
     }

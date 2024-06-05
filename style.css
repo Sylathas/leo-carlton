@@ -206,16 +206,16 @@ body {
 @media only screen and (max-width:600px) {
     .menus {
         width: 110vw;
-        overflow-x: auto;
+        overflow: visible;
     }
 
     #menuContainerLeft {
-        left: -110%;
+        left: -120%;
         justify-content: flex-start;
     }
 
     #menuContainerRight {
-        right: -110%;
+        right: -120%;
         justify-content: flex-end;
     }
 
@@ -245,19 +245,19 @@ body {
         top: 40%;
         background-color: white;
         border: 1px solid black;
-        width: 10vh;
-        height: 10vh;
+        width: 15vh;
+        height: 15vh;
         transition: .5s;
     }
 
     #contentTab {
         right: 0;
-        transform: rotate(-45deg) translateX(-30%);
+        transform: rotate(-45deg);
     }
 
     #aboutTab {
         left: 0;
-        transform: rotate(45deg) translateX(30%);
+        transform: rotate(45deg);
     }
 
     #project {
