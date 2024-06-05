@@ -8,7 +8,7 @@ import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.164.1/examples/
 //FRONTEND
 //------------
 
-let camera, scene, renderer, cssrenderer, background, root, mobile, gizmo;
+let camera, scene, renderer, cssrenderer, background, root, mobile, gizmo, dateIn, dateOut;
 let endCameraPosition = new THREE.Vector3(0, 1.5, 4);
 let projectOpen, active = false;
 let divRotation, overlayRotation = 0;
@@ -68,6 +68,12 @@ function init() {
             gizmo.scale.set(.55, .75, .55);
             gizmo.position.y = .5;
             scene.add(gizmo);
+
+            const newMaterial = new THREE.MeshBasicMaterial({
+                color: 0xA9A9A9
+            });
+            gizmo.children[0].material = newMaterial;
+            console.log(gizmo.children[0])
         }
     );
 
@@ -112,6 +118,13 @@ function animate(time) {
 
     overlayRotation += 1;
     $("#overlayCanvas").css({ "transform": 'RotateY(' + overlayRotation + 'deg)' });
+
+    //Make central image disappear after 5 seconds of no interaction
+    dateOut = Date.now();
+    const seconds = Math.abs(dateOut - dateIn) / 1000;
+    if (seconds > 5) {
+        background.css3dObject.element.style.backgroundImage = 'url("")';
+    }
 
     TWEEN.update(time);
 
@@ -184,11 +197,8 @@ $('#menuLeft').on("mouseover", '.projectLink', function () {
     }
     const project = Projects[index];
     background.css3dObject.element.style.backgroundImage = 'url("' + project.image + '")';
+    dateIn = Date.now();
 });
-
-/*$('#menuLeft').on("mouseleave", '.projectLink', function () {
-    background.css3dObject.element.style.backgroundImage = 'url("")';
-});*/
 
 $('#menuLeft').on("click", '.projectLink', function () {
     //Get correct Project
