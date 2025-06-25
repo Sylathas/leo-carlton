@@ -330,29 +330,20 @@
                 label.innerText = field;
                 form.appendChild(label);
 
-                if (cfg.type === 'text' || cfg.type === 'readonly') {
-                    if (field === "type") {
-                        const select = document.createElement("select");
-                        select.dataset.field = field;
+                if (field === 'type') {
+                    const select = document.createElement("select");
+                    select.dataset.field = field;
 
-                        const options = [
-                            { label: "3D", value: "1_3D" },
-                            { label: "Film", value: "2_Film" },
-                            { label: "Exhibitions", value: "3_Exhibitions" },
-                            { label: "2D", value: "4_2D" }
-                        ];
+                    ["1_3D", "2_Film", "3_Exhibitions", "4_2D"].forEach(opt => {
+                        const option = document.createElement("option");
+                        option.value = opt;
+                        option.textContent = opt;
+                        if (data[field] === opt) option.selected = true;
+                        select.appendChild(option);
+                    });
 
-                        options.forEach(opt => {
-                            const option = document.createElement("option");
-                            option.value = opt.value;
-                            option.textContent = opt.label;
-                            if (data[field] === opt.value) option.selected = true;
-                            select.appendChild(option);
-                        });
-
-                        form.appendChild(select);
-                        continue; // skip default input rendering
-                    }
+                    form.appendChild(select);
+                } else if (cfg.type === 'text' || cfg.type === 'readonly') {
                 } else if (cfg.type === 'markdown') {
                     const textarea = document.createElement("textarea");
                     textarea.id = `md-${field}`;
@@ -566,16 +557,21 @@
 
         window.inviteAdmin = async () => {
             const email = document.getElementById("inviteEmail").value;
-            const password = document.getElementById("invitePassword").value;
-            if (!email || !password) return alert("Enter email and password.");
+            if (!email) return alert("Enter an email address.");
 
             try {
-                const userCred = await createUserWithEmailAndPassword(auth, email, password);
+                // First, create a temporary account to generate UID
+                const tempPassword = Math.random().toString(36).slice(-8);
+                const userCred = await createUserWithEmailAndPassword(auth, email, tempPassword);
                 const newUserId = userCred.user.uid;
 
+                // Assign role
                 await setDoc(doc(db, 'roles', newUserId), { role: 'admin' });
 
-                alert(`Admin ${email} created.`);
+                // Send reset email so they set their own password
+                await sendPasswordResetEmail(auth, email);
+
+                alert(`Admin invited. Password reset link sent to ${email}`);
                 closeInviteModal();
             } catch (err) {
                 console.error("Invite failed:", err);
