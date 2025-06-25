@@ -317,12 +317,28 @@
                 form.appendChild(label);
 
                 if (cfg.type === 'text' || cfg.type === 'readonly') {
-                    const input = document.createElement("input");
-                    input.type = "text";
-                    input.value = cfg.type === 'readonly' ? new Date(data[field]?.seconds * 1000).toLocaleDateString() : (data[field] || '');
-                    input.disabled = cfg.type === 'readonly';
-                    input.dataset.field = field;
-                    form.appendChild(input);
+                    if (field === "type") {
+                        const select = document.createElement("select");
+                        select.dataset.field = field;
+
+                        const options = [
+                            { label: "3D", value: "1_3D" },
+                            { label: "Film", value: "2_Film" },
+                            { label: "Exhibitions", value: "3_Exhibitions" },
+                            { label: "2D", value: "4_2D" }
+                        ];
+
+                        options.forEach(opt => {
+                            const option = document.createElement("option");
+                            option.value = opt.value;
+                            option.textContent = opt.label;
+                            if (data[field] === opt.value) option.selected = true;
+                            select.appendChild(option);
+                        });
+
+                        form.appendChild(select);
+                        continue; // skip default input rendering
+                    }
                 } else if (cfg.type === 'markdown') {
                     const textarea = document.createElement("textarea");
                     textarea.id = `md-${field}`;
