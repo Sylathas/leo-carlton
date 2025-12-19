@@ -13,6 +13,7 @@ let endCameraPosition = new THREE.Vector3(0, 1.5, 4);
 let projectOpen, active = false;
 let divRotation, overlayRotation = 0;
 let drag = false;
+let openingText = true;
 var originX, endX, resizeElement;
 
 init();
@@ -23,6 +24,9 @@ function init() {
     //UTIL
 
     mobile = mobileCheck();
+    if (mobile) {
+        $(openTextMobile).css({ display: 'visible' });
+    }
 
     // SCENE, CAMERA
     scene = new THREE.Scene();
@@ -257,6 +261,10 @@ $('.tabs').on("click", function () {
 });
 
 function triggerTabs(child) {
+    if (openingText) {
+        openingText = false;
+        $(openTextMobile).css({ display: 'none' });
+    }
     if (active) {
         $('#menuContainerRight').css({ 'right': '-100%', 'width': '110%' });
         $('#menuContainerLeft').css({ 'left': '-100%', 'width': '110%' });

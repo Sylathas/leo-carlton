@@ -204,6 +204,10 @@ body {
     font-size: 10px;
 }
 
+#openTextMobile {
+    display: none;
+}
+
 @media only screen and (max-width:600px) {
     .menus {
         width: 110vw;
@@ -277,5 +281,17 @@ body {
 
     .canvas {
         width: 300%;
+    }
+
+    #openTextMobile {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 16px;
+        color: black;
+        background-color: white;
+        text-align: center;
+        z-index: 1000;
     }
 }
