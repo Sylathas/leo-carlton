@@ -261,7 +261,7 @@ $('.tabs').on("click", function () {
 function triggerTabs(child) {
     if (openingText) {
         openingText = false;
-        $('#openTextMobile').css({ opacity: 1 });
+        $('#openTextMobile').css({ opacity: 0 });
         setTimeout(() => {
             $(openTextMobile).css({ display: 'none' });
         }, 500);
