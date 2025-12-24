@@ -160,6 +160,7 @@ function openMenu() {
 }
 
 function openTabs() {
+    $('#openTextMobile').css({ opacity: 1 });
     $('#menuContainerLeft').css({ left: '-100%' });
     $('#menuContainerRight').css({ right: '-100%' });
 }
@@ -260,7 +261,10 @@ $('.tabs').on("click", function () {
 function triggerTabs(child) {
     if (openingText) {
         openingText = false;
-        $(openTextMobile).css({ display: 'none' });
+        $('#openTextMobile').css({ opacity: 1 });
+        setTimeout(() => {
+            $(openTextMobile).css({ display: 'none' });
+        }, 500);
     }
     if (active) {
         $('#menuContainerRight').css({ 'right': '-100%', 'width': '110%' });
