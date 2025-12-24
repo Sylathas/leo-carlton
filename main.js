@@ -24,9 +24,6 @@ function init() {
     //UTIL
 
     mobile = mobileCheck();
-    if (mobile) {
-        $(openTextMobile).css({ display: 'visible' });
-    }
 
     // SCENE, CAMERA
     scene = new THREE.Scene();
