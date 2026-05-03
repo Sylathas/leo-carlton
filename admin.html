@@ -6,7 +6,7 @@
     <title>Admin Panel</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.css">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./style.css">
     <style>
         body {
             overflow: auto !important;
@@ -205,8 +205,6 @@
 
         };
 
-        console.log("Firebase Config:", firebaseConfig);
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -343,7 +341,20 @@
                     });
 
                     form.appendChild(select);
-                } else if (cfg.type === 'text' || cfg.type === 'readonly') {
+                } else if (cfg.type === 'text') {
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.dataset.field = field;
+                    input.value = data[field] || '';
+                    form.appendChild(input);
+                } else if (cfg.type === 'readonly') {
+                    const span = document.createElement("span");
+                    span.style.fontFamily = "'Courier New', monospace";
+                    span.style.fontSize = "13px";
+                    span.textContent = data[field]?.seconds
+                        ? new Date(data[field].seconds * 1000).toLocaleDateString()
+                        : (data[field] || '');
+                    form.appendChild(span);
                 } else if (cfg.type === 'markdown') {
                     const textarea = document.createElement("textarea");
                     textarea.id = `md-${field}`;
@@ -374,14 +385,10 @@
                             progressBar.value = progress;
                         }, console.error, async () => {
                             const url = await getDownloadURL(uploadTask.snapshot.ref);
-                            if (!activeDoc[field]) activeDoc[field] = [];
-                            activeDoc[field].push(url);
+                            activeDoc[field] = url;
                             if (!isNew) await updateDoc(doc(db, col, id), activeDoc);
                             openModal(col, id, activeDoc);
                         });
-                        const url = await getDownloadURL(refPath);
-                        activeDoc[field] = url;
-                        openModal(col, id, activeDoc);
                     };
                     form.appendChild(input);
                 } else if (cfg.type === 'imageArray') {
@@ -439,12 +446,9 @@
                             if (!activeDoc[field]) activeDoc[field] = [];
                             activeDoc[field].push(url);
                             if (!isNew) await updateDoc(doc(db, col, id), activeDoc);
-                            progressBar.remove(); // optional: remove progress bar after upload
-                            openModal(col, id, activeDoc); // reload modal with updated images
+                            progressBar.remove();
+                            openModal(col, id, activeDoc);
                         });
-                        if (!activeDoc[field]) activeDoc[field] = [];
-                        activeDoc[field].push(url);
-                        openModal(col, id, activeDoc); // reload modal with updated images
                     };
 
                     form.appendChild(wrapper);
@@ -490,6 +494,12 @@
             inputs.forEach(i => {
                 const key = i.dataset.field;
                 if (key && key !== '') activeDoc[key] = i.value;
+            });
+
+            const selects = form.querySelectorAll("select");
+            selects.forEach(s => {
+                const key = s.dataset.field;
+                if (key) activeDoc[key] = s.value;
             });
 
             for (const [id, editor] of Object.entries(markdownEditors)) {

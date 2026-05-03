@@ -4,6 +4,7 @@
   "description": "Website for Fashion Designer Leo Carlton",
   "main": "main.js",
   "scripts": {
+    "start": "serve .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -12,5 +13,8 @@
     "@tweenjs/tween.js": "^23.1.2",
     "firebase": "^10.11.1",
     "three": "^0.164.1"
+  },
+  "devDependencies": {
+    "serve": "^14.2.6"
   }
 }

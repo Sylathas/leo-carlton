@@ -1,8 +1,8 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js';
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js'
-import { getFirestore, collection, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-import { CSS3DRenderer, CSS3DObject } from 'https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/renderers/CSS3DRenderer.js';
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from 'three';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 //------------
 //FRONTEND
@@ -185,6 +185,35 @@ function makeElementObject(type, width, height, background, backgroundColor) {
     return obj
 }
 
+//Progressive image loading helpers
+
+function progressiveLoad(img) {
+    img.classList.add('img-loading');
+    if (img.complete && img.naturalWidth > 0) {
+        img.classList.remove('img-loading');
+    } else {
+        img.addEventListener('load', () => img.classList.remove('img-loading'), { once: true });
+        img.addEventListener('error', () => img.classList.remove('img-loading'), { once: true });
+    }
+}
+
+function progressiveLoadBg(el, url) {
+    el.style.filter = 'blur(12px)';
+    el.style.clipPath = 'inset(0)';
+    el.style.transition = 'filter 0.5s ease';
+    const preload = new Image();
+    preload.onload = () => {
+        el.style.backgroundImage = `url("${url}")`;
+        el.style.filter = '';
+        el.style.clipPath = '';
+    };
+    preload.onerror = () => {
+        el.style.filter = '';
+        el.style.clipPath = '';
+    };
+    preload.src = url;
+}
+
 //PROJECTS INTERACTIONS
 
 $('#menuLeft').on("mouseover", '.projectLink', function () {
@@ -198,7 +227,7 @@ $('#menuLeft').on("mouseover", '.projectLink', function () {
     }
     const project = Projects[index];
     if (!mobile) {
-        background.css3dObject.element.style.backgroundImage = 'url("' + project.image + '")';
+        progressiveLoadBg(background.css3dObject.element, project.image);
     }
     dateIn = Date.now();
 });
@@ -221,21 +250,17 @@ $('#menuLeft').on("click", '.projectLink', function () {
     if (!projectOpen) {
         projectOpen = true;
         $("#project").css({ "transition": '0s' });
-        $("#project").css({ 'top': '100%' });
+        $("#project").css({ 'transform': 'translateX(-50%) RotateY(0) Scale(0)' });
         setTimeout(() => {
             $("#project").css({ "transition": '1s' });
-            if (mobile) {
-                $("#project").css({ 'top': '0' });
-            } else {
-                $("#project").css({ 'top': '10%' });
-            }
+            $("#project").css({ 'transform': 'translateX(-50%) RotateY(0) Scale(1)' });
         }, 100);
     } else {
         divRotation += 360;
         $("#project").css({ "transform": 'translateX(-50%) RotateY(' + divRotation + 'deg)' });
     }
 
-    $("#overlayCanvas").css({ "background-image": 'url("' + project.image + '")' });
+    progressiveLoadBg(document.getElementById('overlayCanvas'), project.image);
     $("#projectName").text(project.name);
     var text = project.text,
         target = document.getElementById('projectText'),
@@ -244,13 +269,14 @@ $('#menuLeft').on("click", '.projectLink', function () {
     target.innerHTML = html;
 
     $('#projectText img').each(function () {
+        progressiveLoad(this);
         $(this).after("<p class='imageDesc'>" + $(this).attr("alt") + "</p>");
     });
 });
 
 $('#project').on("click", '#closeDiv', function () {
     projectOpen = false;
-    $("#project").css({ "top": '-105%' });
+    $("#project").css({ 'transform': 'translateX(-50%) RotateY(0) Scale(0)' });
     divRotation += 0;
 });
 
@@ -304,24 +330,23 @@ $('.resize').on("mousedown", function (e) {
         drag = true;
         originX = e.pageX;
         resizeElement = $(this).parent();
+        resizeElement.css('transition', 'none');
     }
 });
 
 $(document).on("mousemove", function (e) {
-    endX = e.pageX - originX;
-    if (resizeElement && resizeElement.attr("id") == 'menuContainerRight') {
-        endX = -endX;
-    }
-    if (drag && resizeElement.width() > 200) {
-        resizeElement.width(resizeElement.width() + endX);
-        e.preventDefault();
-    } else if (resizeElement && resizeElement.width() <= 200) {
-        resizeElement.width(201);
-    }
+    if (!drag || !resizeElement) return;
+    const deltaX = e.pageX - originX;
+    originX = e.pageX;
+    const adjustedDelta = resizeElement.attr("id") === 'menuContainerRight' ? -deltaX : deltaX;
+    resizeElement.width(Math.max(201, resizeElement.width() + adjustedDelta));
+    e.preventDefault();
 });
 
-$(document).on("mouseup", function (e) {
+$(document).on("mouseup", function () {
+    if (resizeElement) resizeElement.css('transition', '');
     drag = false;
+    resizeElement = null;
 });
 
 //Check if Mobile
@@ -364,7 +389,7 @@ class Project {
 
 //Add texts
 const querySnapshotAbout = await getDocs(collection(db, "texts"));
-await querySnapshotAbout.forEach((doc) => {
+querySnapshotAbout.forEach((doc) => {
     var text = doc.data().about_text,
         target = document.getElementById('aboutText'),
         converter = new showdown.Converter(),
@@ -386,8 +411,8 @@ await querySnapshotAbout.forEach((doc) => {
 });
 
 //Create Projects
-const querySnapshot = await getDocs(collection(db, "projects"), orderBy("created_on", "desc"));
-await querySnapshot.forEach((doc) => {
+const querySnapshot = await getDocs(collection(db, "projects"));
+querySnapshot.forEach((doc) => {
     const name = doc.data().project_name;
     const header_image = doc.data().cover_image;
     const type = doc.data().type;
